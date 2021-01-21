@@ -1,36 +1,44 @@
-import {useEffect,useState} from 'react'
-import ColorInput from './components/ColorInput'
-import UsernameInput from './components/UsernameInput'
-import { disconnectSocket, initSocket, receiveColor } from './socketService'
-
-//Butona basıldığında;
-//Backende color,username
-//Contexe color,username
-
+import { useEffect, useState, useContext } from "react";
+import ColorInput from "./components/ColorInput";
+import DisplayReceivedDatas from "./components/DisplayReceivedDatas";
+import UsernameInput from "./components/UsernameInput";
+import { disconnectSocket, initSocket, receiveColor } from "./socketService";
+import ColorContext from "./contexts/ColorContext";
 
 function Container() {
+  const { color } = useContext(ColorContext);
+  let localColor = localStorage.getItem("localColor");
 
-    const [receivedDatas, setReceivedDatas] = useState('')
-    console.log(receivedDatas)
+  const [receivedDatas, setReceivedDatas] = useState({
+    color: localColor,
+    username: "",
+  });
+  console.log(receivedDatas);
 
-    useEffect(()=>{
-        initSocket()
-        
-        receiveColor(color =>{
-            setReceivedDatas(color)
-        })
+  useEffect(() => {
+    initSocket();
 
+    //karşı taraftan gelen username ve color
+    receiveColor((color) => {
+      setReceivedDatas(color);
+    });
 
-        return () => disconnectSocket()
-    },[])
+    return () => disconnectSocket();
+  }, [setReceivedDatas]);
 
+  return (
+    <div>
+      <DisplayReceivedDatas datas={receivedDatas} />
+      <ColorInput />
+      <UsernameInput />
 
-    return (
-        <div>
-            <ColorInput/>
-            <UsernameInput/>
-        </div>
-    )
+      {color.username === "" ? (
+        <h3>Please enter a name </h3>
+      ) : (
+        <h3>Your username: {color.username}</h3>
+      )}
+    </div>
+  );
 }
 
-export default Container
+export default Container;

@@ -23,9 +23,7 @@ export const sendColor = (color) =>{
 
 export const receiveColor = (cb) =>{
     if(!socket) return true
-
     socket.on("receive-color",color=>{
         cb(color)
     })
-
 }
