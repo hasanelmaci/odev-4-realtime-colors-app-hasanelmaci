@@ -4,9 +4,6 @@ import ColorContext from "../contexts/ColorContext";
 function DisplayReceivedDatas({ datas }) {
   const { color } = useContext(ColorContext);
 
-  console.log(datas.color);
-  console.log(datas.username);
-
   useEffect(() => {
     document.body.style.backgroundColor = datas.color;
   }, [{ datas }]);

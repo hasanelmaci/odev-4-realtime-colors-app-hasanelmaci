@@ -13,7 +13,6 @@ function Container() {
     color: localColor,
     username: "",
   });
-  console.log(receivedDatas);
 
   useEffect(() => {
     initSocket();
